@@ -1,14 +1,80 @@
-name: Check extension
-on: [push, pull_request, workflow_dispatch]
+name: Build Chrome extension
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
-  check:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python scripts/check.py
-      - run: python scripts/build.py
+      - name: Validate extension and release version
+        run: |
+          python scripts/check.py
+          python - <<'PY'
+          import json, os
+          version = json.load(open('extension/manifest.json'))['version']
+          if os.environ['GITHUB_REF_TYPE'] == 'tag':
+              assert os.environ['GITHUB_REF_NAME'] == 'v' + version, 'Tag must match manifest version'
+          PY
+      - name: Build installable ZIP and checksum
+        run: python scripts/build.py
+      - name: Verify ZIP layout
+        run: |
+          python - <<'PY'
+          import json, zipfile
+          from pathlib import Path
+          archives = list(Path('dist').glob('*.zip'))
+          assert len(archives) == 1
+          with zipfile.ZipFile(archives[0]) as archive:
+              assert archive.testzip() is None
+              assert 'manifest.json' in archive.namelist()
+              assert json.loads(archive.read('manifest.json'))['manifest_version'] == 3
+              assert all(not name.startswith(('/', 'extension/', 'research/')) and '..' not in Path(name).parts for name in archive.namelist())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: yolkashka-chrome-${{ github.run_number }}
+          path: |
+            dist/*.zip
+            dist/*.sha256
+          if-no-files-found: error
+          retention-days: 30
+      - name: Download instructions
+        run: |
+          echo '### Download' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Artifacts below contain the installable extension ZIP and SHA256 checksum. Unpack the Actions artifact wrapper first; then unpack the inner extension ZIP and select its manifest.json folder in chrome://extensions.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Tagged versions also publish the ZIP directly in GitHub Releases.' >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: yolkashka-chrome-${{ github.run_number }}
+          path: dist
+      - name: Publish downloadable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" dist/*.zip dist/*.sha256 --clobber
+          else
+            gh release create "$RELEASE_TAG" dist/*.zip dist/*.sha256 --verify-tag --title "Ёлкашка $RELEASE_TAG" --notes "Скачайте yolkashka-chrome-*.zip из Assets (не Source code). Распакуйте, откройте chrome://extensions, включите режим разработчика и загрузите папку с manifest.json. SHA256 приложен для проверки архива."
+          fi
