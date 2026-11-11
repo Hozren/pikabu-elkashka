@@ -1,5 +1,7 @@
 # Ёлкашка
 
+<img src="extension/icons/icon-128.png" alt="Ёлкашка" width="128" height="128">
+
 [Репозиторий](https://github.com/Hozren/pikabu-elkashka) · [Сообщить об ошибке](https://github.com/Hozren/pikabu-elkashka/issues)
 
 Неофициальное расширение для Google Chrome: возвращает привычный вид трём реакциям на Pikabu.
@@ -48,7 +50,7 @@ python3 scripts/check.py
 python3 scripts/build.py
 ```
 
-На Windows используйте `py -3` вместо `python3`. Архив появится в `dist/yolkashka-chrome-0.1.0.zip`; имя следует версии в manifest. `manifest.json` находится в корне ZIP. Сборка не обращается в сеть и не включает исследовательские материалы.
+На Windows используйте `py -3` вместо `python3`. Архив появится в `dist/yolkashka-chrome-0.1.1.zip`; имя следует версии в manifest. `manifest.json` находится в корне ZIP. Сборка не обращается в сеть и не включает исследовательские материалы.
 
 Структура:
 
