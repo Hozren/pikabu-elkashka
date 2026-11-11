@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Ёлкашка — старые реакции Пикабу",
+  "version": "0.1.0",
+  "description": "Визуально заменяет ёлку на какашку, череп на клоуна, голубя на петуха. Только на Пикабу.",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://pikabu.ru/*",
+        "https://www.pikabu.ru/*"
+      ],
+      "css": [
+        "replacements.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/*.svg"
+      ],
+      "matches": [
+        "https://pikabu.ru/*",
+        "https://www.pikabu.ru/*"
+      ]
+    }
+  ]
+}

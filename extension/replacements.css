@@ -1,0 +1,61 @@
+/* Visual only: original reaction IDs, events and counters stay untouched. */
+
+svg.icon--ui-kit__christmastree_m {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/assets/poop_m.svg") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+svg.icon--ui-kit__christmastree_m > * {
+  visibility: hidden !important;
+}
+
+svg.icon--ui-kit__christmastree_s {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/assets/poop_s.svg") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+svg.icon--ui-kit__christmastree_s > * {
+  visibility: hidden !important;
+}
+
+svg.icon--ui-kit__skull_m {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/assets/clown_m.svg") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+svg.icon--ui-kit__skull_m > * {
+  visibility: hidden !important;
+}
+
+svg.icon--ui-kit__skull_s {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/assets/clown_s.svg") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+svg.icon--ui-kit__skull_s > * {
+  visibility: hidden !important;
+}
+
+svg.icon--ui-kit__dove_m {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/assets/cock_m.svg") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+svg.icon--ui-kit__dove_m > * {
+  visibility: hidden !important;
+}
+
+svg.icon--ui-kit__dove_s {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/assets/cock_s.svg") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+svg.icon--ui-kit__dove_s > * {
+  visibility: hidden !important;
+}
